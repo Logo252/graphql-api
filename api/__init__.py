@@ -6,8 +6,7 @@ from ariadne import load_schema_from_path, make_executable_schema, \
     graphql_sync, snake_case_fallback_resolvers, ObjectType
 from ariadne.constants import PLAYGROUND_HTML
 from flask import request, jsonify
-from api.queries import listPosts_resolver, getPost_resolver
-from api.mutations import create_post_resolver, update_post_resolver, delete_post_resolver
+
 
 app = Flask(__name__)
 CORS(app)
@@ -17,6 +16,9 @@ print(config.SQLALCHEMY_DATABASE_URI)
 app.config.from_object(Config())
 
 db = SQLAlchemy(app)
+
+from api.queries import listPosts_resolver, getPost_resolver
+from api.mutations import create_post_resolver, update_post_resolver, delete_post_resolver
 
 query = ObjectType("Query")
 mutation = ObjectType("Mutation")
