@@ -1,3 +1,5 @@
+from datetime import date
+
 from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -7,18 +9,17 @@ from ariadne import load_schema_from_path, make_executable_schema, \
 from ariadne.constants import PLAYGROUND_HTML
 from flask import request, jsonify
 
-
 app = Flask(__name__)
 CORS(app)
 
 config = Config()
-print(config.SQLALCHEMY_DATABASE_URI)
 app.config.from_object(Config())
 
 db = SQLAlchemy(app)
 
 from api.queries import listPosts_resolver, getPost_resolver
 from api.mutations import create_post_resolver, update_post_resolver, delete_post_resolver
+from api.models import Post
 
 query = ObjectType("Query")
 mutation = ObjectType("Mutation")
@@ -33,6 +34,8 @@ schema = make_executable_schema(
     type_defs, query, mutation, snake_case_fallback_resolvers
 )
 
+
+# Graphql routes
 
 @app.route("/graphql", methods=["GET"])
 def graphql_playground():
@@ -52,6 +55,68 @@ def graphql_server():
     return jsonify(result), status_code
 
 
+# API routes
+
+@app.route('/posts', methods=["GET"])
+def get_all_posts():
+    posts = [post.to_dict() for post in Post.query.all()]
+    return posts
+
+
+@app.route('/posts/<id>', methods=["GET"])
+def get_post(id):
+    post = Post.query.get(id)
+
+    if post is None:
+        return {"message": "Post is not found"}, 404
+
+    return post.to_dict()
+
+
+@app.route('/posts', methods=["POST"])
+def create_post():
+    data = request.json
+    today = date.today()
+    post = Post(
+        title=data['title'], description=data['description'], created_at=today.strftime("%b-%d-%Y")
+    )
+    db.session.add(post)
+    db.session.commit()
+
+    return post.to_dict(), 201
+
+
+@app.route('/posts/<id>', methods=["PATCH"])
+def patch_post(id):
+    data = request.json
+    post = Post.query.get(id)
+
+    if post is None:
+        return {"message": "Post is not found"}, 404
+
+    if "title" in data:
+        post.title = data['title']
+    if "description" in data:
+        post.description = data['description']
+    db.session.add(post)
+    db.session.commit()
+
+    return {}, 204
+
+
+@app.route('/posts/<id>', methods=["DELETE"])
+def delete_post(id):
+    post = Post.query.get(id)
+
+    if post is None:
+        return {"message": "Post is not found"}, 404
+
+    db.session.delete(post)
+    db.session.commit()
+
+    return {}, 204
+
+
 @app.route('/')
 def hello():
-    return 'My First API !!'
+    return 'Test first endpoint'

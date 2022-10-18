@@ -1,16 +1,28 @@
 # Setup up Graphql API
 
-### Active virtual env:
-`source venv/bin/active`
+## Run API
 
-### Deactivate virtual env:
-`deactivate`
+### Virtual env:
+- Activate: `source ./venv/bin/activate`
+- Deactivate: `deactivate`
+
+### Libraries
+- Install libraries from requirements.txt file: `pip install -r requirements.txt`
+- Update libraries to requirements.txt file: `pip freeze > requirements.txt`
 
 ### Run containers:
 `do up -d`
 
-### Check containers:
-`dco ps`
+### Run flask API. Server will start running on http://127.0.0.1:5000
+`python manage.py run`
+
+### Access Graphql API playground
+`http://127.0.0.1:5000/graphql`
+
+### Access Rest API playground
+`http://127.0.0.1:5000/graphql`
+
+## Manage DB
 
 ### Create DB:
 `python manage.py create_db`
