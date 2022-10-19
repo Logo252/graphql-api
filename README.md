@@ -3,7 +3,8 @@
 ## Run API
 
 ### Virtual env:
-- Activate: `source ./venv/bin/activate`
+- Create: `python3 -m venv /path-to-new-virtual-environment`
+- Activate: `source /path-to-new-virtual-environment/bin/activate`
 - Deactivate: `deactivate`
 
 ### Libraries

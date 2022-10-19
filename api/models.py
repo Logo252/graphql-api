@@ -1,4 +1,4 @@
-from manage import db
+from api import db
 
 
 class Post(db.Model):

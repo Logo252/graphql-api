@@ -19,7 +19,7 @@ type PostResult {
 type PostsResult {
     success: Boolean!
     errors: [String]
-    post: [Post]
+    posts: [Post]
 }
 
 type Query {

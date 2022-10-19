@@ -1,7 +1,6 @@
 from datetime import date
 
 from flask import Flask
-from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from api.config import Config
 from ariadne import load_schema_from_path, make_executable_schema, \
@@ -10,21 +9,20 @@ from ariadne.constants import PLAYGROUND_HTML
 from flask import request, jsonify
 
 app = Flask(__name__)
-CORS(app)
 
 config = Config()
 app.config.from_object(Config())
 
 db = SQLAlchemy(app)
 
-from api.queries import listPosts_resolver, getPost_resolver
+from api.queries import list_posts_resolver, get_post_resolver
 from api.mutations import create_post_resolver, update_post_resolver, delete_post_resolver
 from api.models import Post
 
 query = ObjectType("Query")
 mutation = ObjectType("Mutation")
-query.set_field("listPosts", listPosts_resolver)
-query.set_field("getPost", getPost_resolver)
+query.set_field("listPosts", list_posts_resolver)
+query.set_field("getPost", get_post_resolver)
 mutation.set_field("createPost", create_post_resolver)
 mutation.set_field("updatePost", update_post_resolver)
 mutation.set_field("deletePost", delete_post_resolver)
