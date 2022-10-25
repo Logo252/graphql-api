@@ -1,6 +1,4 @@
-# Setup up Graphql API
-
-## GraphQL vs REST API
+## Setup up Graphql API
 
 ### Virtual env:
 - Create: `python3 -m venv /path-to-new-virtual-environment`
@@ -14,14 +12,11 @@
 ### Run containers:
 `docker-compose up -d`
 
-### Change flask env variables to your needs if it is necessary
+### Change flask env variables to your needs
 File name - `.flaskenv`
 
 ### Run flask API. Server will start running on http://127.0.0.1:3000
 `python manage.py run`
-
-### Access Graphql API playground
-`http://127.0.0.1:3000/graphql`
 
 ## Manage DB
 
@@ -39,7 +34,90 @@ File name - `.flaskenv`
 1. `dco exec db psql --username=hello_flask --dbname=hello_flask_dev`
 2. `select * from table;`
 
+## REST API
+- GET list of authors: /authors
+- GET one author: /authors/:id
+- CREATE new author: /authors
+- PATCH update author: /authors/:id
+- DELETE delete author: /authors/:id
+
+## GraphQL API playground
+
+### Access GraphQL API playground
+`http://127.0.0.1:3000/graphql`
+
+### Example queries 
+Get author:
+```
+query GetAuthor {
+  getAuthor(id: "2") {
+    author {
+      id
+      name
+    }
+    success
+    errors
+  }
+}
+```
+
+Get all authors:
+```
+query AllAuthors {
+  listAuthors {
+    authors {
+      id,
+      name
+    }
+    success
+    errors
+  }
+}
+```
+
+### Example mutations 
+Create new author:
+```
+mutation CreateNewAuthor {
+  createAuthor(name: "Jonas") {
+    author {
+      id
+      name
+      created_at
+    }
+    success
+    errors
+  }
+}
+}
+```
+
+Update author:
+```
+mutation UpdateAuthor {
+  updateAuthor(id: "3", name: "Ciurka") {
+    success
+    errors
+  }
+}
+```
+
+Delete author:
+```
+mutation DeleteAuthor {
+  deleteAuthor(id:"5") {
+    author {
+      id
+      name
+      created_at
+    }
+    success
+    errors
+  }
+}
+```
+
 ### TO DO:
-- Add new entity: Book. Add relation to this entity with author.
+- Add new entity: Book. Add relation to this entity with author: One to Many.
 - Update API to be able to Create/Get/Update/Delete book by author.
-- Update GraphQL to be query/mutate books.
+- Update GraphQL to query/mutate books.
