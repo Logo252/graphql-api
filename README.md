@@ -118,6 +118,7 @@ mutation DeleteAuthor {
 ```
 
 ### TO DO:
-- Add new entity: Book. Add relation to this entity with author: One to Many.
-- Update API to be able to Create/Get/Update/Delete book by author.
-- Update GraphQL to query/mutate books.
+1. Add new entity: Book with title and category. Add relation to this entity with author: One to Many.
+Update seed_db command (manage.py) accordingly to add multiple books to author.
+2. Update API to be able to Create/Get/Update/Delete book by author.
+3. Update GraphQL to query/mutate books.

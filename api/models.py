@@ -6,6 +6,9 @@ class Author(db.Model):
     name = db.Column(db.String)
     created_at = db.Column(db.Date)
 
+    # TO DO: Finish implementing book entity
+    # books = db.relationship('Book', backref='book')
+
     def to_dict(self):
         return {
             "id": self.id,
