@@ -16,8 +16,8 @@ def create_db():
 @cli.command("seed_db")
 def seed_db():
     current_date = datetime.today().date()
-    post = models.Post(title="A new morning", description="A new morning details", created_at=current_date)
-    db.session.add(post)
+    author = models.Author(name="Interesting author name", created_at=current_date)
+    db.session.add(author)
     db.session.commit()
 
 

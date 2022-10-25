@@ -1,13 +1,12 @@
-from .models import Post
-from ariadne import convert_kwargs_to_snake_case
+from .models import Author
 
 
-def list_posts_resolver(obj, info):
+def list_authors_resolver(obj, info):
     try:
-        posts = [post.to_dict() for post in Post.query.all()]
+        authors = [author.to_dict() for author in Author.query.all()]
         payload = {
             "success": True,
-            "posts": posts
+            "authors": authors
         }
     except Exception as error:
         payload = {
@@ -17,17 +16,16 @@ def list_posts_resolver(obj, info):
     return payload
 
 
-@convert_kwargs_to_snake_case
-def get_post_resolver(obj, info, id):
+def get_author_resolver(obj, info, id):
     try:
-        post = Post.query.get(id)
+        author = Author.query.get(id)
         payload = {
             "success": True,
-            "post": post.to_dict()
+            "author": author.to_dict()
         }
     except AttributeError:
         payload = {
             "success": False,
-            "errors": ["Post item matching {id} not found"]
+            "errors": ["Author item matching {id} not found"]
         }
     return payload

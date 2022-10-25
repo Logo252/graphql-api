@@ -1,21 +1,19 @@
 from datetime import date
-from ariadne import convert_kwargs_to_snake_case
 from api import db
-from api.models import Post
+from api.models import Author
 
 
-@convert_kwargs_to_snake_case
-def create_post_resolver(obj, info, title, description):
+def create_author_resolver(obj, info, name):
     try:
         today = date.today()
-        post = Post(
-            title=title, description=description, created_at=today.strftime("%b-%d-%Y")
+        author = Author(
+            name=name, created_at=today.strftime("%b-%d-%Y")
         )
-        db.session.add(post)
+        db.session.add(author)
         db.session.commit()
         payload = {
             "success": True,
-            "post": post.to_dict()
+            "author": author.to_dict()
         }
     except ValueError:  # date format errors
         payload = {
@@ -26,20 +24,18 @@ def create_post_resolver(obj, info, title, description):
     return payload
 
 
-@convert_kwargs_to_snake_case
-def update_post_resolver(obj, info, id, title, description):
+def update_author_resolver(obj, info, id, name):
     try:
-        post = Post.query.get(id)
-        if post:
-            post.title = title
-            post.description = description
-        db.session.add(post)
+        author = Author.query.get(id)
+        if author:
+            author.name = name
+        db.session.add(author)
         db.session.commit()
         payload = {
             "success": True,
-            "post": post.to_dict()
+            "author": author.to_dict()
         }
-    except AttributeError:  # todo not found
+    except AttributeError:
         payload = {
             "success": False,
             "errors": ["item matching id {id} not found"]
@@ -47,13 +43,12 @@ def update_post_resolver(obj, info, id, title, description):
     return payload
 
 
-@convert_kwargs_to_snake_case
-def delete_post_resolver(obj, info, id):
+def delete_author_resolver(obj, info, id):
     try:
-        post = Post.query.get(id)
-        db.session.delete(post)
+        author = Author.query.get(id)
+        db.session.delete(author)
         db.session.commit()
-        payload = {"success": True, "post": post.to_dict()}
+        payload = {"success": True, "author": author.to_dict()}
     except AttributeError:
         payload = {
             "success": False,

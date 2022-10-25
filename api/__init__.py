@@ -15,17 +15,17 @@ app.config.from_object(Config())
 
 db = SQLAlchemy(app)
 
-from api.queries import list_posts_resolver, get_post_resolver
-from api.mutations import create_post_resolver, update_post_resolver, delete_post_resolver
-from api.models import Post
+from api.queries import list_authors_resolver, get_author_resolver
+from api.mutations import create_author_resolver, update_author_resolver, delete_author_resolver
+from api.models import Author
 
 query = ObjectType("Query")
 mutation = ObjectType("Mutation")
-query.set_field("listPosts", list_posts_resolver)
-query.set_field("getPost", get_post_resolver)
-mutation.set_field("createPost", create_post_resolver)
-mutation.set_field("updatePost", update_post_resolver)
-mutation.set_field("deletePost", delete_post_resolver)
+query.set_field("listAuthors", list_authors_resolver)
+query.set_field("getAuthor", get_author_resolver)
+mutation.set_field("createAuthor", create_author_resolver)
+mutation.set_field("updateAuthor", update_author_resolver)
+mutation.set_field("deleteAuthor", delete_author_resolver)
 
 type_defs = load_schema_from_path("schema.graphql")
 schema = make_executable_schema(
@@ -55,61 +55,59 @@ def graphql_server():
 
 # API routes
 
-@app.route('/posts', methods=["GET"])
-def get_all_posts():
-    posts = [post.to_dict() for post in Post.query.all()]
-    return posts
+@app.route('/authors', methods=["GET"])
+def get_all_authors():
+    authors = [author.to_dict() for author in Author.query.all()]
+    return authors
 
 
-@app.route('/posts/<id>', methods=["GET"])
-def get_post(id):
-    post = Post.query.get(id)
+@app.route('/authors/<id>', methods=["GET"])
+def get_author(id):
+    author = Author.query.get(id)
 
-    if post is None:
-        return {"message": "Post is not found"}, 404
+    if author is None:
+        return {"message": "Author is not found"}, 404
 
-    return post.to_dict()
+    return author.to_dict()
 
 
-@app.route('/posts', methods=["POST"])
-def create_post():
+@app.route('/authors', methods=["POST"])
+def create_author():
     data = request.json
     today = date.today()
-    post = Post(
-        title=data['title'], description=data['description'], created_at=today.strftime("%b-%d-%Y")
+    author = Author(
+        name=data['name'], created_at=today.strftime("%b-%d-%Y")
     )
-    db.session.add(post)
+    db.session.add(author)
     db.session.commit()
 
-    return post.to_dict(), 201
+    return author.to_dict(), 201
 
 
-@app.route('/posts/<id>', methods=["PATCH"])
-def patch_post(id):
+@app.route('/authors/<id>', methods=["PATCH"])
+def patch_author(id):
     data = request.json
-    post = Post.query.get(id)
+    author = Author.query.get(id)
 
-    if post is None:
-        return {"message": "Post is not found"}, 404
+    if author is None:
+        return {"message": "Author is not found"}, 404
 
-    if "title" in data:
-        post.title = data['title']
-    if "description" in data:
-        post.description = data['description']
-    db.session.add(post)
+    if "name" in data:
+        author.name = data['name']
+    db.session.add(author)
     db.session.commit()
 
     return {}, 204
 
 
-@app.route('/posts/<id>', methods=["DELETE"])
-def delete_post(id):
-    post = Post.query.get(id)
+@app.route('/authors/<id>', methods=["DELETE"])
+def delete_author(id):
+    author = Author.query.get(id)
 
-    if post is None:
-        return {"message": "Post is not found"}, 404
+    if author is None:
+        return {"message": "Author is not found"}, 404
 
-    db.session.delete(post)
+    db.session.delete(author)
     db.session.commit()
 
     return {}, 204

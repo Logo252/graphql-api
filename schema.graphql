@@ -3,32 +3,31 @@ schema {
     mutation: Mutation
 }
 
-type Post {
+type Author {
     id: ID!
-    title: String!
-    description: String!
+    name: String!
     created_at: String!
 }
 
-type PostResult {
+type AuthorResult {
     success: Boolean!
     errors: [String]
-    post: Post
+    author: Author
 }
 
-type PostsResult {
+type AuthorsResult {
     success: Boolean!
     errors: [String]
-    posts: [Post]
+    authors: [Author]
 }
 
 type Query {
-    listPosts: PostsResult!
-    getPost(id: ID!): PostResult!
+    listAuthors: AuthorsResult!
+    getAuthor(id: ID!): AuthorResult!
 }
 
 type Mutation {
-    createPost(title: String!, description: String!, created_at: String): PostResult!
-    updatePost(id: ID!, title: String, description: String): PostResult!
-    deletePost(id: ID): PostResult!
+    createAuthor(name: String!, created_at: String): AuthorResult!
+    updateAuthor(id: ID!, name: String): AuthorResult!
+    deleteAuthor(id: ID): AuthorResult!
 }
